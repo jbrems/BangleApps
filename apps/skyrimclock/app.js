@@ -1,0 +1,181 @@
+const locale = require('locale');
+
+(() => {
+  let updateLoop;
+
+  function setUp () {
+    Bangle.on('lcdPower', on => {
+      if (on) start();
+      else stop();
+    });
+    setWatch(Bangle.showLauncher, BTN2, { repeat: false, edge: 'falling' });
+
+    start();
+  }
+
+  function start () {
+    g.reset();
+    g.clear();
+
+    drawStatic();
+    update();
+
+    updateLoop = setInterval(update, 1000);
+
+    Bangle.loadWidgets();
+    Bangle.drawWidgets();
+  }
+
+  function stop () {
+    if (updateLoop) clearInterval(updateLoop);
+  }
+
+  function update () {
+    g.reset();
+
+    const now = new Date();
+    drawDate(now);
+    drawSkyrimDate(now);
+    drawTime(now);
+  }
+
+  function drawStatic () {
+    drawDateBorder();
+    drawLogo();
+  }
+
+  function drawDateBorder () {
+    const xOffset = 10;
+    const yOffset = 35;
+    const scale = 2;
+
+    const moveTo = createScaledMoveToWithOffsetFn(xOffset, yOffset, scale);
+    const lineTo = createScaledLineToWithOffsetFn(xOffset, yOffset, scale);
+    const moveToInverse = createScaledMoveToWithOffsetFn(xOffset, yOffset, scale, true);
+    const lineToInverse = createScaledLineToWithOffsetFn(xOffset, yOffset, scale, true);
+
+    moveTo(0, 6);
+    lineTo(6, 0);
+    lineTo(12, 6);
+    lineTo(6, 12);
+    lineTo(0, 6);
+
+    moveTo(10, 0);
+    lineTo(6, 4);
+    lineTo(12, 11);
+    lineTo(14, 11);
+    lineTo(14, 1);
+    lineTo(12, 1);
+    lineTo(6, 8);
+    lineTo(10, 12);
+
+    lineToInverse(10, 12);
+    lineToInverse(6, 8);
+    lineToInverse(12, 1);
+    lineToInverse(14, 1);
+    lineToInverse(14, 11);
+    lineToInverse(12, 11);
+    lineToInverse(6, 4);
+    lineToInverse(10, 0);
+    lineTo(10, 0);
+
+    moveToInverse(0, 6);
+    lineToInverse(6, 0);
+    lineToInverse(12, 6);
+    lineToInverse(6, 12);
+    lineToInverse(0, 6);
+
+    g.setPixel(27, 38, '#000000');
+    g.setPixel(25, 40, '#000000');
+    g.setPixel(29, 42, '#000000');
+    g.setPixel(30, 43, '#000000');
+    g.setPixel(29, 51, '#000000');
+    g.setPixel(30, 52, '#000000');
+    g.setPixel(27, 54, '#000000');
+    g.setPixel(25, 56, '#000000');
+    g.setPixel(25, 48, '#000000');
+    g.setPixel(26, 46, '#000000');
+
+    g.setPixel(g.getWidth() - 27, 38, '#000000');
+    g.setPixel(g.getWidth() - 25, 40, '#000000');
+    g.setPixel(g.getWidth() - 29, 42, '#000000');
+    g.setPixel(g.getWidth() - 30, 43, '#000000');
+    g.setPixel(g.getWidth() - 29, 51, '#000000');
+    g.setPixel(g.getWidth() - 30, 52, '#000000');
+    g.setPixel(g.getWidth() - 27, 54, '#000000');
+    g.setPixel(g.getWidth() - 25, 56, '#000000');
+    g.setPixel(g.getWidth() - 25, 48, '#000000');
+    g.setPixel(g.getWidth() - 26, 46, '#000000');
+  }
+
+  function createScaledMoveToWithOffsetFn (xOffset, yOffset, scale, inverse) {
+    return function (x, y) {
+      if (inverse) g.moveTo(g.getWidth() - xOffset - x * scale, yOffset + y * scale);
+      else g.moveTo(xOffset + x * scale, yOffset + y * scale);
+    };
+  }
+
+  function createScaledLineToWithOffsetFn (xOffset, yOffset, scale, inverse) {
+    return function (x, y) {
+      if (inverse) g.lineTo(g.getWidth() - xOffset - x * scale, yOffset + y * scale);
+      else g.lineTo(xOffset + x * scale, yOffset + y * scale);
+    };
+  }
+
+  function drawLogo () {
+    const logo = E.toArrayBuffer(atob("NmaBAAAAAAAAAAAAAAAAAAAAAAGABgAAAAAGABgAAAAAOABwAAAAAOABwAAAAAfAD4AAAAAdAC4AAAAA5ACcAAAAA4AAcAAAABwAAMAAAABwAAOAAAABwYAOAAAADwQAPAAAADwYAPAAAAHgYAHgAAAHgMGHgAAAPgMcHwAAAPgfwHwAAAfA/gD4AAAfA/wD4AAA/A/+D8AAA/A+fD8AAB/BwHD+AAB+BgDB+AAD+BgDh/AAD+AADh/AAH+AADB/AAH+AAHB/gAH+AAOB/gAP/gB8H/wAP/gH4H/wAf8wPgM/4Af4QeAIf4A/4A8AAf8A/wA8AAP8B/wB8AAP+B/wB8AAP+D/gB+AAP/D/gA/AAH/H/gw/gMH/n/gY/wYH/v/gP//wH/3/gP//wH/3/wf//4P/j////////D////////D////////B///////+B///////+A///////8A///////8Af//////4Af//////4AP//////wAP+f//5/wAH+G/9h/gAH+GP5h/gAH+CP5B/gAD+AH4B/AAD+AD4B/AAB8AD4A+AAB8AD4A+AAA8AB4A8AAA+AB4B8AAAeAB4B4AAAfAB4D4AAAPwB4PwAAAP4B4fwAAAP8B4/wAAAH8Bw/gAAAH8Bw/gAAAD8Dg/AAAAD8Hg/AAAAB8PA+AAAAB8OA+AAAAA8eA8AAAAA8cA8AAAAAccA4AAAAAcMA4AAAAAcOA4AAAAAMGAwAAAAAMGAwAAAAAEGAgAAAAAAOAAAAAAAAMAAAAAAAAcAAAAAAAA4AAAAAAAAwAAAAAAAA4AAAAAAAA4EAAAAAAAcMAAAAAAAeYAAAAAAAP4AAAAAAAP4AAAAAAAHwAAAAAAAHwAAAAAAADgAAAAAAADgAAAAAAABgAAAAAAABAAAAAAAAAAAAAA"));
+
+    g.drawImage(logo, 180, 85);
+  }
+
+  function drawDate (now) {
+    g.clearRect(40, 37, 200, 57);
+
+    const dateString = locale.date(now);
+
+    g.setFont('Vector12', 13);
+    const length = g.stringWidth(dateString);
+    g.drawString(dateString, (g.getWidth() - length) / 2, 40);
+  }
+
+  function drawTime (now) {
+    g.clearRect(15, 80, 180, 120);
+
+    g.setFont('Vector12', 35);
+    g.drawString(zeroPad(now.getHours()), 15, 80);
+
+    g.drawString(':', 76, 76);
+
+    g.drawString(zeroPad(now.getMinutes()), 90, 80);
+
+    g.setFont('Vector12', 14);
+    g.drawString(zeroPad(now.getSeconds()), 150, 101);
+  }
+
+  function zeroPad (number) {
+    return ('0' + number).slice(-2);
+  }
+
+  function drawSkyrimDate (now) {
+    const skyrimDays = ['Sundas', 'Morndas', 'Tirdas', 'Middas', 'Turdas', 'Fredas', 'Loredas'];
+    const skyrimMonths = ['Morning Star', `Sun's Dawn`, 'First Seed', `Rain's Hand`, 'Second Seed', 'Mid Year', `Sun's Height`, 'Last Seed', 'Hearthfire', 'Frost Fall', `Sun's Dusk`, 'Evening Star'];
+
+    g.clearRect(15, 140, 180, 160);
+    g.clearRect(15, 170, 200, 190);
+
+    g.setFont('Vector12', 13);
+    g.drawString(skyrimDays[now.getDay()], 15, 140);
+
+    const monthString = `${now.getDate()}${getDateSuffix(now.getDate())} of ${skyrimMonths[now.getMonth()]}`;
+    g.drawString(monthString, 15, 170);
+  }
+
+  function getDateSuffix (date) {
+    if (date.toString().endsWith('1') && date !== 11) return 'st';
+    if (date.toString().endsWith('2') && date !== 12) return 'nd';
+    if (date.toString().endsWith('3') && date !== 13) return 'rd';
+    return 'th';
+  }
+
+  setUp();
+})();
