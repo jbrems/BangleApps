@@ -1,13 +1,17 @@
 const locale = require('locale');
 
 (() => {
-  let updateLoop;
+  let timeUpdateLoop;
+  let dateUpdate;
+
+  setUp();
 
   function setUp () {
     Bangle.on('lcdPower', on => {
       if (on) start();
       else stop();
     });
+
     setWatch(Bangle.showLauncher, BTN2, { repeat: false, edge: 'falling' });
 
     start();
@@ -18,25 +22,46 @@ const locale = require('locale');
     g.clear();
 
     drawStatic();
-    update();
 
-    updateLoop = setInterval(update, 1000);
+    const now = new Date();
+    drawDate(now);
+    drawTime(now);
+    drawSkyrimDate(now);
+
+    timeUpdateLoop = setInterval(updateTime, 1000);
+    dateUpdate = setTimeout(updateDate, getMsTillMidnight());
 
     Bangle.loadWidgets();
     Bangle.drawWidgets();
   }
 
   function stop () {
-    if (updateLoop) clearInterval(updateLoop);
+    if (timeUpdateLoop) clearInterval(timeUpdateLoop);
+    if (dateUpdate) clearTimeout(dateUpdate);
   }
 
-  function update () {
+  function updateTime () {
+    g.reset();
+    drawTime(new Date());
+  }
+
+  function updateDate () {
     g.reset();
 
-    const now = new Date();
-    drawDate(now);
-    drawSkyrimDate(now);
-    drawTime(now);
+    const date = new Date();
+    drawDate(date);
+    drawSkyrimDate(date);
+  }
+
+  function getMsTillMidnight () {
+    const dayStart = new Date();
+    dayStart.setHours(0);
+    dayStart.setMinutes(0);
+    dayStart.setSeconds(0);
+    dayStart.setMilliseconds(0);
+    const msSinceDayStart = Date.now() - dayStart.getTime();
+    const msInDay = 1000 * 60 * 60 * 24;
+    return msInDay - msSinceDayStart;
   }
 
   function drawStatic () {
@@ -176,6 +201,4 @@ const locale = require('locale');
     if (date.toString().endsWith('3') && date !== 13) return 'rd';
     return 'th';
   }
-
-  setUp();
 })();
