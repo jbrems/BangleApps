@@ -1,5 +1,9 @@
 const locale = require('locale');
 
+// In v2.07 the rendering of vector fonts has changed.
+// If your watch is running v2.06 or older, set this to true.
+const v206 = false;
+
 (() => {
   let timeUpdateLoop;
   let dateUpdate;
@@ -170,7 +174,9 @@ const locale = require('locale');
 
     const dateString = locale.date(now);
 
-    g.setFont('Vector12', 13);
+    if (v206) g.setFont('Vector12', 13);
+    else g.setFont('Vector12', 16);
+
     const length = g.stringWidth(dateString);
     g.drawString(dateString, (g.getWidth() - length) / 2, 40);
   }
@@ -178,14 +184,18 @@ const locale = require('locale');
   function drawTime (now) {
     g.clearRect(15, 80, 180, 120);
 
-    g.setFont('Vector12', 35);
+    if (v206) g.setFont('Vector12', 35);
+    else g.setFont('Vector12', 45);
+
     g.drawString(zeroPad(now.getHours()), 15, 80);
 
     g.drawString(':', 76, 76);
 
     g.drawString(zeroPad(now.getMinutes()), 90, 80);
 
-    g.setFont('Vector12', 14);
+    if (v206) g.setFont('Vector12', 14);
+    else g.setFont('Vector12', 20);
+
     g.drawString(zeroPad(now.getSeconds()), 150, 101);
   }
 
@@ -200,7 +210,9 @@ const locale = require('locale');
     g.clearRect(15, 140, 180, 160);
     g.clearRect(15, 170, 200, 190);
 
-    g.setFont('Vector12', 13);
+    if (v206) g.setFont('Vector12', 13);
+    else g.setFont('Vector12', 16);
+
     g.drawString(skyrimDays[now.getDay()], 15, 140);
 
     const monthString = `${now.getDate()}${getDateSuffix(now.getDate())} of ${skyrimMonths[now.getMonth()]}`;
