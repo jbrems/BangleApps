@@ -20,7 +20,10 @@ const v206 = false;
   function startApp () {
     drawApp();
 
+    if (timeUpdateLoop) clearInterval(timeUpdateLoop);
     timeUpdateLoop = setInterval(updateTime, 1000);
+
+    if (dateUpdate) clearTimeout(dateUpdate);
     dateUpdate = setTimeout(updateDate, getMsTillMidnight());
 
     Bangle.loadWidgets();
