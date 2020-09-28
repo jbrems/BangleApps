@@ -2191,7 +2191,7 @@
  { "id": "skyrimclock",
     "name": "Skyrim Clock",
     "shortName":"Skyrim Clock",
-    "icon": "clock-skyrim.png",
+    "icon": "icon.png",
     "version":"0.01",
     "description": "An Elder Scrolls V: Skyrim themed clock.",
     "tags": "clock",
@@ -2200,7 +2200,7 @@
     "allow_emulator": true,
     "storage": [
       {"name":"skyrimclock.app.js","url":"app.js"},
-      {"name":"skyrimclock.img","url":"clock-skyrim-icon.js","evaluate":true}
+      {"name":"skyrimclock.img","url":"icon.js","evaluate":true}
     ]
  }
 ]
