@@ -55,7 +55,7 @@ try and keep filenames short to avoid overflowing the buffer.
 * Create a folder called `apps/<id>`, lets assume `apps/7chname`
 * We'd recommend that you copy files from 'Example Applications' (below) as a base, or...
 * `apps/7chname/app.png` should be a 48px icon
-* Use http://www.espruino.com/Image+Converter to create `apps/7chname/app-icon.js`, using a 1 bit, 4 bit or 8 bit Web Palette "Image String"
+* Use http://www.espruino.com/Image+Converter to create `apps/7chname/app-app-icon.js`, using a 1 bit, 4 bit or 8 bit Web Palette "Image String"
 * Create an entry in `apps.json` as follows:
 
 ```
@@ -67,7 +67,7 @@ try and keep filenames short to avoid overflowing the buffer.
   "tags": "",
   "storage": [
     {"name":"7chname.app.js","url":"app.js"},
-    {"name":"7chname.img","url":"app-icon.js","evaluate":true}
+    {"name":"7chname.img","url":"app-app-icon.js","evaluate":true}
   ],
 },
 ```
@@ -95,7 +95,7 @@ Be aware of the delay between commits and updates on github.io - it can take a f
 Using the 'Storage' icon in [the Web IDE](https://www.espruino.com/ide/)
 (4 discs), upload your files into the places described in your JSON:
 
-* `app-icon.js` -> `7chname.img`
+* `app-app-icon.js` -> `7chname.img`
 
 Now load `app.js` up in the editor, and click the down-arrow to the bottom
 right of the `Send to Espruino` icon. Click `Storage` and then either choose
@@ -130,10 +130,10 @@ Apps are listed in the Bangle.js menu, accessible from a clock app via the middl
 
 * `add_to_apps.json` - insert into `apps.json`, describes the app to bootloader and loader
 * `app.png` - app icon - 48x48px
-* `app-icon.js` - JS version of the icon (made with http://www.espruino.com/Image+Converter) for use in Bangle.js's menu
+* `app-app-icon.js` - JS version of the icon (made with http://www.espruino.com/Image+Converter) for use in Bangle.js's menu
 * `app.js` - app code
 
-#### `app-icon.js`
+#### `app-app-icon.js`
 
 The icon image and short description is used in Bangle.js's launcher.
 
