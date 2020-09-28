@@ -4,9 +4,6 @@ const locale = require('locale');
   let timeUpdateLoop;
   let dateUpdate;
 
-  setUpWatchers();
-  startApp();
-
   function setUpWatchers () {
     Bangle.on('lcdPower', on => {
       if (on) startApp();
@@ -216,4 +213,7 @@ const locale = require('locale');
     if (date.toString().endsWith('3') && date !== 13) return 'rd';
     return 'th';
   }
+
+  setUpWatchers();
+  startApp();
 })();
