@@ -4,20 +4,39 @@ const locale = require('locale');
   let timeUpdateLoop;
   let dateUpdate;
 
-  setUp();
+  setUpWatchers();
+  startApp();
 
-  function setUp () {
+  function setUpWatchers () {
     Bangle.on('lcdPower', on => {
-      if (on) start();
-      else stop();
+      if (on) startApp();
+      else stopApp();
     });
 
-    setWatch(Bangle.showLauncher, BTN2, { repeat: false, edge: 'falling' });
-
-    start();
+    setWatch(showLauncher, BTN2, { repeat: false, edge: 'falling' });
   }
 
-  function start () {
+  function startApp () {
+    drawApp();
+
+    timeUpdateLoop = setInterval(updateTime, 1000);
+    dateUpdate = setTimeout(updateDate, getMsTillMidnight());
+
+    Bangle.loadWidgets();
+    Bangle.drawWidgets();
+  }
+
+  function stopApp () {
+    if (timeUpdateLoop) clearInterval(timeUpdateLoop);
+    if (dateUpdate) clearTimeout(dateUpdate);
+  }
+
+  function showLauncher () {
+    stopApp();
+    Bangle.showLauncher();
+  }
+
+  function drawApp () {
     g.reset();
     g.clear();
 
@@ -27,17 +46,6 @@ const locale = require('locale');
     drawDate(now);
     drawTime(now);
     drawSkyrimDate(now);
-
-    timeUpdateLoop = setInterval(updateTime, 1000);
-    dateUpdate = setTimeout(updateDate, getMsTillMidnight());
-
-    Bangle.loadWidgets();
-    Bangle.drawWidgets();
-  }
-
-  function stop () {
-    if (timeUpdateLoop) clearInterval(timeUpdateLoop);
-    if (dateUpdate) clearTimeout(dateUpdate);
   }
 
   function updateTime () {
@@ -79,12 +87,14 @@ const locale = require('locale');
     const moveToInverse = createScaledMoveToWithOffsetFn(xOffset, yOffset, scale, true);
     const lineToInverse = createScaledLineToWithOffsetFn(xOffset, yOffset, scale, true);
 
+    // Draw left diamond
     moveTo(0, 6);
     lineTo(6, 0);
     lineTo(12, 6);
     lineTo(6, 12);
     lineTo(0, 6);
 
+    // Draw left pattern
     moveTo(10, 0);
     lineTo(6, 4);
     lineTo(12, 11);
@@ -94,6 +104,7 @@ const locale = require('locale');
     lineTo(6, 8);
     lineTo(10, 12);
 
+    // Draw right pattern
     lineToInverse(10, 12);
     lineToInverse(6, 8);
     lineToInverse(12, 1);
@@ -104,33 +115,37 @@ const locale = require('locale');
     lineToInverse(10, 0);
     lineTo(10, 0);
 
+    // Draw right diamond
     moveToInverse(0, 6);
     lineToInverse(6, 0);
     lineToInverse(12, 6);
     lineToInverse(6, 12);
     lineToInverse(0, 6);
 
-    g.setPixel(27, 38, '#000000');
-    g.setPixel(25, 40, '#000000');
-    g.setPixel(29, 42, '#000000');
-    g.setPixel(30, 43, '#000000');
-    g.setPixel(29, 51, '#000000');
-    g.setPixel(30, 52, '#000000');
-    g.setPixel(27, 54, '#000000');
-    g.setPixel(25, 56, '#000000');
-    g.setPixel(25, 48, '#000000');
-    g.setPixel(26, 46, '#000000');
+    const black = '#000000';
+    // Remove left pixels for line intersections
+    g.setPixel(27, 38, black);
+    g.setPixel(25, 40, black);
+    g.setPixel(29, 42, black);
+    g.setPixel(30, 43, black);
+    g.setPixel(29, 51, black);
+    g.setPixel(30, 52, black);
+    g.setPixel(27, 54, black);
+    g.setPixel(25, 56, black);
+    g.setPixel(25, 48, black);
+    g.setPixel(26, 46, black);
 
-    g.setPixel(g.getWidth() - 27, 38, '#000000');
-    g.setPixel(g.getWidth() - 25, 40, '#000000');
-    g.setPixel(g.getWidth() - 29, 42, '#000000');
-    g.setPixel(g.getWidth() - 30, 43, '#000000');
-    g.setPixel(g.getWidth() - 29, 51, '#000000');
-    g.setPixel(g.getWidth() - 30, 52, '#000000');
-    g.setPixel(g.getWidth() - 27, 54, '#000000');
-    g.setPixel(g.getWidth() - 25, 56, '#000000');
-    g.setPixel(g.getWidth() - 25, 48, '#000000');
-    g.setPixel(g.getWidth() - 26, 46, '#000000');
+    // Remove right pixels for line intersections
+    g.setPixel(g.getWidth() - 27, 38, black);
+    g.setPixel(g.getWidth() - 25, 40, black);
+    g.setPixel(g.getWidth() - 29, 42, black);
+    g.setPixel(g.getWidth() - 30, 43, black);
+    g.setPixel(g.getWidth() - 29, 51, black);
+    g.setPixel(g.getWidth() - 30, 52, black);
+    g.setPixel(g.getWidth() - 27, 54, black);
+    g.setPixel(g.getWidth() - 25, 56, black);
+    g.setPixel(g.getWidth() - 25, 48, black);
+    g.setPixel(g.getWidth() - 26, 46, black);
   }
 
   function createScaledMoveToWithOffsetFn (xOffset, yOffset, scale, inverse) {
