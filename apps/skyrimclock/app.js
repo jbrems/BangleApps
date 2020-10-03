@@ -1,6 +1,8 @@
 const locale = require('locale');
+const heatshrink = require('heatshrink');
 
-const skyrimLogo = E.toArrayBuffer(atob("NmaBAAAAAAAAAAAAAAAAAAAAAAGABgAAAAAGABgAAAAAOABwAAAAAOABwAAAAAfAD4AAAAAdAC4AAAAA5ACcAAAAA4AAcAAAABwAAMAAAABwAAOAAAABwYAOAAAADwQAPAAAADwYAPAAAAHgYAHgAAAHgMGHgAAAPgMcHwAAAPgfwHwAAAfA/gD4AAAfA/wD4AAA/A/+D8AAA/A+fD8AAB/BwHD+AAB+BgDB+AAD+BgDh/AAD+AADh/AAH+AADB/AAH+AAHB/gAH+AAOB/gAP/gB8H/wAP/gH4H/wAf8wPgM/4Af4QeAIf4A/4A8AAf8A/wA8AAP8B/wB8AAP+B/wB8AAP+D/gB+AAP/D/gA/AAH/H/gw/gMH/n/gY/wYH/v/gP//wH/3/gP//wH/3/wf//4P/j////////D////////D////////B///////+B///////+A///////8A///////8Af//////4Af//////4AP//////wAP+f//5/wAH+G/9h/gAH+GP5h/gAH+CP5B/gAD+AH4B/AAD+AD4B/AAB8AD4A+AAB8AD4A+AAA8AB4A8AAA+AB4B8AAAeAB4B4AAAfAB4D4AAAPwB4PwAAAP4B4fwAAAP8B4/wAAAH8Bw/gAAAH8Bw/gAAAD8Dg/AAAAD8Hg/AAAAB8PA+AAAAB8OA+AAAAA8eA8AAAAA8cA8AAAAAccA4AAAAAcMA4AAAAAcOA4AAAAAMGAwAAAAAMGAwAAAAAEGAgAAAAAAOAAAAAAAAMAAAAAAAAcAAAAAAAA4AAAAAAAAwAAAAAAAA4AAAAAAAA4EAAAAAAAcMAAAAAAAeYAAAAAAAP4AAAAAAAP4AAAAAAAHwAAAAAAAHwAAAAAAADgAAAAAAADgAAAAAAABgAAAAAAABAAAAAAAAAAAAAA"));
+const skyrimDateBorder = heatshrink.decompress(atob("5sbgI2zgUD/4AS+EgDIMoAYQARoWAGQMih4XRgfBkQEBkGAxAZRiMChAyBAYNADKOEkBiBkEIwQYRgkCoGAGQUQDKMgoMCAYJmBQgIAPgMBgkIGQUEGSMIkkQGIMIxDNSoURgB8BkEhDCMCkEQAQMAZicSgJPBTQLMTxCtBJgNIZichiEIS4LMUyDmBkACBZiUCF4MAwLMUPQJ+BgmQZiVBkgyBMgNBZiUQGQJqBoIdBACERMoUAxMH4AZR+FIGQMCwgXRZoUoQgUf/4AS4DHRAEQA=="));
+const skyrimLogo = heatshrink.decompress(atob("m1mhH+AH4A96/XBrI1/GiA1OG0g10EoQnLBxxqbGpZskEYg1MG0YiSGsIhUGu42eEA4nMGr4fCGowVUGsBrOGrYeJExo2dDpRzMGrgcDGpivJGzQcKBQhCKGrI0YGzg1RFBA1ZE5Y1HbBg2UGqBiKGrBaOCpLnTNSwWKUTZNMGphsbQa41cCow1TKjQ1XCQ4fVGqzpKD6QUHC5gOJDygWUBpY1VCZQoMDxAiMaqaTJDxLZUI6L4QEiR8VGpwlPNSo1YfBY1vGiISGGq4YEGqQ2eISAOCEBQuINiA1OEQpISFJgKJLJIAPDCJrQGt69PDDImWADpcXGv6wjGlI12G1w0GGuw2sGhA12G1Q0KGpJAVEBg2SBYo6KBoYfOGrAQIBow1iBgI1MD6I2QCB4eYCy41jEhoQRGio12C4gQZGixsVNT5ORGp40UJ6AOKNTIbGZSQXOGqiVQCxw1WSxYVRNj5qlGu73MBA40gEJYIMGroiFGhgSJGsoSPGzxqMBRY1iCJw2gGqA0gEg413a5Q1hMo41KGkQ12EwI1OGkjNrU6w0vGuSf/Nf41qHlo2GOVw1CGASnwGwbdxGuo2FGl412GwY0xGuw2CGug0zADYA=="));
 
 let timeUpdateLoop;
 let dateUpdate;
@@ -76,124 +78,30 @@ function getMsTillMidnight() {
 }
 
 function drawStatic() {
-  drawDateBorder();
-  drawLogo();
-}
-
-function drawDateBorder() {
-  const xOffset = 10;
-  const yOffset = 35;
-  const scale = 2;
-
-  const moveTo = createScaledMoveToWithOffsetFn(xOffset, yOffset, scale);
-  const lineTo = createScaledLineToWithOffsetFn(xOffset, yOffset, scale);
-  const moveToInverse = createScaledMoveToWithOffsetFn(xOffset, yOffset, scale, true);
-  const lineToInverse = createScaledLineToWithOffsetFn(xOffset, yOffset, scale, true);
-
-  // Draw left diamond
-  moveTo(0, 6);
-  lineTo(6, 0);
-  lineTo(12, 6);
-  lineTo(6, 12);
-  lineTo(0, 6);
-
-  // Draw left pattern
-  moveTo(10, 0);
-  lineTo(6, 4);
-  lineTo(12, 11);
-  lineTo(14, 11);
-  lineTo(14, 1);
-  lineTo(12, 1);
-  lineTo(6, 8);
-  lineTo(10, 12);
-
-  // Draw right pattern
-  lineToInverse(10, 12);
-  lineToInverse(6, 8);
-  lineToInverse(12, 1);
-  lineToInverse(14, 1);
-  lineToInverse(14, 11);
-  lineToInverse(12, 11);
-  lineToInverse(6, 4);
-  lineToInverse(10, 0);
-  lineTo(10, 0);
-
-  // Draw right diamond
-  moveToInverse(0, 6);
-  lineToInverse(6, 0);
-  lineToInverse(12, 6);
-  lineToInverse(6, 12);
-  lineToInverse(0, 6);
-
-  const black = '#000000';
-  // Remove left pixels for line intersections
-  g.setPixel(27, 38, black);
-  g.setPixel(25, 40, black);
-  g.setPixel(29, 42, black);
-  g.setPixel(30, 43, black);
-  g.setPixel(29, 51, black);
-  g.setPixel(30, 52, black);
-  g.setPixel(27, 54, black);
-  g.setPixel(25, 56, black);
-  g.setPixel(25, 48, black);
-  g.setPixel(26, 46, black);
-
-  // Remove right pixels for line intersections
-  g.setPixel(g.getWidth() - 27, 38, black);
-  g.setPixel(g.getWidth() - 25, 40, black);
-  g.setPixel(g.getWidth() - 29, 42, black);
-  g.setPixel(g.getWidth() - 30, 43, black);
-  g.setPixel(g.getWidth() - 29, 51, black);
-  g.setPixel(g.getWidth() - 30, 52, black);
-  g.setPixel(g.getWidth() - 27, 54, black);
-  g.setPixel(g.getWidth() - 25, 56, black);
-  g.setPixel(g.getWidth() - 25, 48, black);
-  g.setPixel(g.getWidth() - 26, 46, black);
-}
-
-function createScaledMoveToWithOffsetFn(xOffset, yOffset, scale, inverse) {
-  return function (x, y) {
-    if (inverse) g.moveTo(g.getWidth() - xOffset - x * scale, yOffset + y * scale);
-    else g.moveTo(xOffset + x * scale, yOffset + y * scale);
-  };
-}
-
-function createScaledLineToWithOffsetFn(xOffset, yOffset, scale, inverse) {
-  return function (x, y) {
-    if (inverse) g.lineTo(g.getWidth() - xOffset - x * scale, yOffset + y * scale);
-    else g.lineTo(xOffset + x * scale, yOffset + y * scale);
-  };
-}
-
-function drawLogo() {
+  g.drawImage(skyrimDateBorder, 17, 35);
   g.drawImage(skyrimLogo, 180, 85);
 }
 
 function drawDate(now) {
-  g.clearRect(40, 37, 200, 57);
+  g.clearRect(46, 39, 193, 57);
 
   const dateString = locale.date(now);
 
   g.setFont('Vector12', 16);
-
   const length = g.stringWidth(dateString);
-  g.drawString(dateString, (g.getWidth() - length) / 2, 40);
+  g.drawString(dateString, (g.getWidth() - length) / 2, 41);
 }
 
 function drawTime(now) {
   g.clearRect(15, 80, 180, 120);
 
   g.setFont('Vector12', 45);
-
   g.drawString(zeroPad(now.getHours()), 15, 80);
-
-  g.drawString(':', 76, 76);
-
+  g.drawString(':', 75, 76);
   g.drawString(zeroPad(now.getMinutes()), 90, 80);
 
   g.setFont('Vector12', 20);
-
-  g.drawString(zeroPad(now.getSeconds()), 150, 101);
+  g.drawString(zeroPad(now.getSeconds()), 148, 101);
 }
 
 function zeroPad(number) {
@@ -224,4 +132,3 @@ function getDateSuffix(date) {
 
 setUpWatchers();
 startApp();
-
